@@ -1,20 +1,22 @@
 package com.epam.ms.service;
 
-import com.epam.ms.repository.IUserRepository;
-import com.epam.ms.repository.entity.User;
+import com.epam.ms.repository.UserRepository;
+import com.epam.ms.repository.domain.User;
 import com.epam.ms.service.validation.UserValidator;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
-    @Autowired
-    private IUserRepository repository;
+    @NonNull
+    private UserRepository repository;
 
-    @Autowired
+    @NonNull
     private UserValidator validator;
 
     public User create(User user) {
@@ -22,29 +24,27 @@ public class UserService {
         return repository.save(user);
     }
 
-    public List<User> getAll() {
+    public List<User> findAll() {
         return (List)repository.findAll();
     }
 
-    public User getById(Long id) {
+    public User findById(String id) {
         return repository.findById(id).orElse(null);
     }
 
-    public Long update(Long id, User user) {
+    public User update(String id, User user) {
         Optional<User> existingUser = repository.findById(id);
-        if(!existingUser.isPresent()) {
-            validator.checkEmailInUse(user.getEmail());
-            return repository.save(user).getId();
-        } else {
+        if(existingUser.isPresent()) {
             validator.checkEmailInUse(user.getEmail(), id);
             User currentUser = existingUser.get();
             copyUserData(user, currentUser);
-            repository.save(currentUser);
+            return repository.save(currentUser);
+        } else {
             return null;
         }
     }
 
-    public void delete(Long id) {
+    public void delete(String id) {
         repository.deleteById(id);
     }
 

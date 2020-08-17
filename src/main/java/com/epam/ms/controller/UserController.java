@@ -1,8 +1,10 @@
 package com.epam.ms.controller;
 
-import com.epam.ms.repository.entity.User;
+import com.epam.ms.repository.domain.User;
 import com.epam.ms.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,20 +20,20 @@ import static java.util.Objects.nonNull;
  */
 @RestController
 @RequestMapping("/users")
+@Slf4j
+@RequiredArgsConstructor
 public class UserController {
-    private static final String CREATED_USER_URI = "/users/%s";
-
-    @Autowired
+    @NonNull
     private UserService service;
 
     @GetMapping
     public List<User> getAll() {
-        return service.getAll();
+        return service.findAll();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity getById(@PathVariable Long id) {
-        User user = service.getById(id);
+    public ResponseEntity<User> getById(@PathVariable String id) {
+        User user = service.findById(id);
         return isNull(user)
                 ? ResponseEntity.notFound().build()
                 : ResponseEntity.ok(user);
@@ -40,23 +42,29 @@ public class UserController {
     @PostMapping
     public ResponseEntity<Void> create(@RequestBody User user) {
         User createdUser = service.create(user);
+        String id = createdUser.getId();
+        log.info("A new user is created: /users/{}", id);
         return ResponseEntity.created(
-                URI.create(String.format(CREATED_USER_URI, createdUser.getId())))
+                URI.create(String.format("/users/%s", id)))
                 .build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable String id) {
         service.delete(id);
+        log.info("The notification with id {} is deleted", id);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody User user) {
-        Long createdUserId = service.update(id, user);
-        return nonNull(createdUserId)
-                ? ResponseEntity.created(URI.create(String.format(CREATED_USER_URI, createdUserId.toString()))).build()
-                : ResponseEntity.noContent().build();
-
+    public ResponseEntity<Void> update(@PathVariable String id, @RequestBody User user) {
+        User createdUser = service.update(id, user);
+        if(nonNull(createdUser)) {
+            log.info("The user with id {} is updated", id);
+            return ResponseEntity.noContent().build();
+        } else {
+            log.error("The user with id {} not found", id);
+            return ResponseEntity.notFound().build();
+        }
     }
 }
