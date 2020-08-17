@@ -1,19 +1,21 @@
-package com.epam.ms.repository.entity;
+package com.epam.ms.repository.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
-@Table(name = "users")
+@Table(name = "users", schema = "users")
 @Data
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    private String id;
 
     @Size(max = 45, message = "The first name must be up to 45 characters")
     private String firstName;
@@ -29,5 +31,7 @@ public class User {
     private String password;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private String role;
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name="role_id")
+    private UserRole role;
 }
