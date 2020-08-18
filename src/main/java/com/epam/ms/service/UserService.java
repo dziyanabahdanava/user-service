@@ -41,6 +41,7 @@ public class UserService {
             return repository.save(currentUser);
         } else {
             return null;
+
         }
     }
 
