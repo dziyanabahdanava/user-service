@@ -7,10 +7,7 @@
             CREATE SCHEMA IF NOT EXISTS users
         </sql>
     </changeSet>
-<!--    <changeSet author="Dziyana Bahdanava" id="create userrole type">-->
-<!--        <sqlFile path="liquibase/create_userrole_type.sql" splitStatements="false"/>-->
-<!--    </changeSet>-->
-    <changeSet author="Dziyana Bahdanava" id="create table">
+    <changeSet author="Dziyana Bahdanava" id="create table Users">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="users"/>
@@ -32,7 +29,7 @@
             <column name="password" type="VARCHAR(20)">
                 <constraints nullable="false"/>
             </column>
-            <column name="role_id" type="INTEGER">
+            <column name="role" type="VARCHAR(20)">
                 <constraints nullable="false"/>
             </column>
         </createTable>

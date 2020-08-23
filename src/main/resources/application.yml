@@ -12,6 +12,5 @@ spring:
   hibernate:
     ddl-auto: none
   liquibase:
-    defaultSchema: users
     enabled: true
     change-log: classpath:liquibase/db.changelog.xml

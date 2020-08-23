@@ -20,7 +20,7 @@ public class UserService {
     private UserValidator validator;
 
     public User create(User user) {
-        validator.checkEmailInUse(user.getEmail());
+        validator.validateOnCreate(user);
         return repository.save(user);
     }
 
@@ -35,7 +35,7 @@ public class UserService {
     public User update(String id, User user) {
         Optional<User> existingUser = repository.findById(id);
         if(existingUser.isPresent()) {
-            validator.checkEmailInUse(user.getEmail(), id);
+            validator.validateOnUpdate(user);
             User currentUser = existingUser.get();
             copyUserData(user, currentUser);
             return repository.save(currentUser);

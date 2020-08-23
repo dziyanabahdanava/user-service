@@ -3,6 +3,8 @@ package com.epam.ms.service.exception;
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.util.Objects.nonNull;
+
 /**
  * Base Exception for user data processing exceptions
  * @author Dziyana Bahdanava
@@ -66,5 +68,13 @@ public class UserException extends RuntimeException {
 
     public void addUserParameter(String key, String value) {
         this.getUserParameters().put(key, value);
+    }
+
+    public void setParameters(Map<String, Object> parameters) {
+        if(nonNull(parameters)) {
+            parameters.entrySet().stream()
+                    .filter(entry -> nonNull(entry.getValue()))
+                    .forEach(entry -> this.addUserParameter(entry.getKey(), entry.getValue().toString()));
+        }
     }
 }

@@ -1,8 +1,7 @@
 package com.epam.ms.controller.util;
 
-import com.epam.ms.service.exception.EmailInUseException;
+import com.epam.ms.service.exception.ConflictingDataException;
 import lombok.extern.slf4j.Slf4j;
-import org.postgresql.util.PSQLException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -42,10 +41,10 @@ public class GlobalDefaultExceptionHandler extends ResponseEntityExceptionHandle
         return ResponseEntity.status(500).body(errorData);
     }
 
-    @ExceptionHandler(value = EmailInUseException.class)
-    public ResponseEntity<ErrorData> emailInUseErrorHandler(EmailInUseException e) {
+    @ExceptionHandler(value = ConflictingDataException.class)
+    public ResponseEntity<ErrorData> conflictingDataErrorHandler(ConflictingDataException e) {
         ErrorData errorData = new ErrorData(e.getMessage(), e);
-        log.error("The user with this email already exists", e);
+        log.error("The request could not be completed due to a conflict with the current state of the target resource", e);
         return ResponseEntity.status(409).body(errorData);
     }
 }
