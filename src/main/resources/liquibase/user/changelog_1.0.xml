@@ -7,7 +7,7 @@
             CREATE SCHEMA IF NOT EXISTS users
         </sql>
     </changeSet>
-    <changeSet author="Dziyana Bahdanava" id="create table Users">
+    <changeSet author="Dziyana Bahdanava" id="create table users">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="users"/>
@@ -32,6 +32,15 @@
             <column name="role" type="VARCHAR(20)">
                 <constraints nullable="false"/>
             </column>
+            <column name="receive_notifications"
+                    type="BOOLEAN">
+                <constraints nullable="false" />
+            </column>
         </createTable>
+    </changeSet>
+    <changeSet author="Dziyana Bahdanava" id="addColumn is_active">
+        <addColumn schemaName= "users" tableName="users" >
+            <column name="is_active" type="BOOLEAN" defaultValue="true"/>
+        </addColumn>
     </changeSet>
 </databaseChangeLog>

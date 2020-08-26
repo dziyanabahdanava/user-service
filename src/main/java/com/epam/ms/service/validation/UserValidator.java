@@ -24,8 +24,8 @@ public class UserValidator implements Validator{
     }
 
     @Override
-    public void validateOnUpdate(User user) {
-        checkEmailInUse(user.getEmail(), user.getId());
+    public void validateOnUpdate(User user, String id) {
+        checkEmailInUse(user.getEmail(), id);
     }
 
     private void checkEmailInUse(String email) {
@@ -37,8 +37,8 @@ public class UserValidator implements Validator{
 
     private void checkEmailInUse(String email, String id) {
         Optional<User> userWithSameEmail = repository.findByEmail(email);
-        if(userWithSameEmail.isPresent() && !StringUtils.equals(id, userWithSameEmail.get().getId())) {
-            log.error("The user with the following email already exists: " + email);
+        if(userWithSameEmail.isPresent() && !StringUtils.equals(userWithSameEmail.get().getId(), id)) {
+            log.error("The user with the following email already exists: {}", email);
             throw new ConflictingDataException("The user with the following email already exists: " + email);
         }
     }

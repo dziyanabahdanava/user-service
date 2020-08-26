@@ -2,9 +2,11 @@ package com.epam.ms.controller;
 
 import com.epam.ms.repository.domain.User;
 import com.epam.ms.service.UserService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,9 +28,14 @@ public class UserController {
     @NonNull
     private UserService service;
 
+    @NonNull
+    AmqpTemplate template;
+
     @GetMapping
-    public ResponseEntity<List<User>> getAll() {
-        return ResponseEntity.ok(service.findAll());
+    public ResponseEntity<List<User>> getAll(@RequestParam(required = false) Boolean receiveNotifications) {
+        return isNull(receiveNotifications)
+                ? ResponseEntity.ok(service.findAll())
+                : ResponseEntity.ok(service.findByReceiveNotifications(receiveNotifications));
     }
 
     @GetMapping("/{id}")
@@ -57,7 +64,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> update(@PathVariable String id, @RequestBody User user) {
+    public ResponseEntity<Void> update(@PathVariable String id, @RequestBody User user) throws JsonProcessingException {
         User createdUser = service.update(id, user);
         if(nonNull(createdUser)) {
             log.info("The user with id {} is updated", id);

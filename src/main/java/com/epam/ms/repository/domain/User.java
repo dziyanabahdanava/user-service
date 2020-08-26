@@ -26,6 +26,12 @@ public class User {
     @NotNull(message = "Email cannot be null")
     private String email;
 
+    @NotNull(message = "You must indicate whether you agree to receive notifications")
+    private boolean receiveNotifications;
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private boolean isActive;
+
     @NotNull(message = "Password cannot be null")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
