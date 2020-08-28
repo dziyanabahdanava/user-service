@@ -39,4 +39,11 @@ public class User {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Enumerated(EnumType.STRING)
     private UserRole role;
+
+    @Transient
+    private String userProfileId;
+
+    @OneToOne
+    @JoinColumn(name = "user_profile_id", referencedColumnName = "id")
+    private UserProfile userProfile;
 }

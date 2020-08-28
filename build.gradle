@@ -31,7 +31,6 @@ dependencies {
     implementation 'org.liquibase:liquibase-core'
     implementation 'org.apache.commons:commons-lang3'
     implementation 'org.springframework.amqp:spring-rabbit'
-    compile group: 'com.google.guava', name: 'guava', version: '29.0-jre'
 }
 
 test {

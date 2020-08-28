@@ -59,7 +59,7 @@ public class UserController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable String id) {
         service.delete(id);
-        log.info("The notification with id {} is deleted", id);
+        log.info("The user with id {} is deleted", id);
         return ResponseEntity.noContent().build();
     }
 
