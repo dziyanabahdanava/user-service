@@ -20,21 +20,24 @@ import static java.util.Objects.nonNull;
  * @author Dziyana Bahdanava
  */
 @RestController
-@RequestMapping("/user_profiles")
+@RequestMapping("/users")
 @Slf4j
 @RequiredArgsConstructor
 public class UserProfileController {
     @NonNull
     private UserProfileService profileService;
 
-    @GetMapping
-    public ResponseEntity<List<UserProfile>> getAll(@RequestParam (required = false) String userId) {
-        return isNull(userId) ?
-                ResponseEntity.ok(profileService.findAll())
-                : ResponseEntity.ok(singletonList(profileService.findByUserId(userId)));
+    @GetMapping("/{id}/profiles")
+    public ResponseEntity<UserProfile> getUsersProfile(@PathVariable String id) {
+        return ResponseEntity.ok(profileService.findByUserId(id));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/profiles")
+    public ResponseEntity<List<UserProfile>> getAll() {
+        return ResponseEntity.ok(profileService.findAll());
+    }
+
+    @GetMapping("/profiles/{id}")
     public ResponseEntity<UserProfile> getById(@PathVariable String id) {
         UserProfile userProfile = profileService.findById(id);
         return isNull(userProfile)
@@ -42,24 +45,24 @@ public class UserProfileController {
                 : ResponseEntity.ok(userProfile);
     }
 
-    @PostMapping
+    @PostMapping("/profiles")
     public ResponseEntity<Void> create(@RequestBody UserProfile userProfile) {
         UserProfile createdUserProfile = profileService.create(userProfile);
         String id = createdUserProfile.getId();
-        log.info("A new user profile is created: /user_profiles/{}", id);
+        log.info("A new user profile is created: /users/profiles/{}", id);
         return ResponseEntity.created(
                 URI.create(String.format("/user_profiles/%s", id)))
                 .build();
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/profiles/{id}")
     public ResponseEntity<Void> delete(@PathVariable String id) {
         profileService.delete(id);
         log.info("The user profile with id {} is deleted", id);
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/profiles/{id}")
     public ResponseEntity<Void> update(@PathVariable String id, @RequestBody UserProfile userProfile) {
         UserProfile createdUserProfile = profileService.update(id, userProfile);
         if(nonNull(createdUserProfile)) {
