@@ -35,7 +35,7 @@ public class UserProfile {
     @NotNull(message = "Please enter your goal")
     @Enumerated(EnumType.STRING)
     private Goal goal;
-    
+
     @NotNull(message = "Please enter your physical activity")
     @Enumerated(EnumType.STRING)
     private PhysicalActivity physicalActivity;

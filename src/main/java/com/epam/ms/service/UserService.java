@@ -1,11 +1,10 @@
 package com.epam.ms.service;
 
 import com.epam.ms.queue.QueueHandler;
-import com.epam.ms.repository.UserProfileRepository;
 import com.epam.ms.repository.UserRepository;
 import com.epam.ms.repository.domain.User;
-import com.epam.ms.repository.domain.UserProfile;
 import com.epam.ms.service.validation.UserValidator;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,8 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-
-import static java.util.Objects.nonNull;
 
 @Slf4j
 @Service
@@ -26,15 +23,12 @@ public class UserService {
     @NonNull
     private UserRepository repository;
     @NonNull
-    private UserProfileRepository userProfileRepository;
-    @NonNull
     private UserValidator validator;
     @NonNull
     private QueueHandler queueHandler;
 
     public User create(User user) {
         validator.validateOnCreate(user);
-        updateUserProfile(user);
         return repository.save(user);
     }
 
@@ -57,7 +51,6 @@ public class UserService {
             User currentUser = existingUser.get();
             checkUserStateAndNotify(user, currentUser);
             copyUserData(user, currentUser);
-            updateUserProfile(user);
             return repository.save(currentUser);
         } else {
             return null;
@@ -80,23 +73,10 @@ public class UserService {
     }
 
     private void checkUserStateAndNotify(User updatedUser, User existingUser) {
-        final String userId = existingUser.getId();
         if(updatedUser.isActive() && !existingUser.isActive()) {
-            log.info("The user {} has been unblocked", userId);
-            queueHandler.sendEventToQueue(userId, USER_UNBLOCKED_EVENT);
+            queueHandler.sendEventToQueue(existingUser.getId(), USER_UNBLOCKED_EVENT);
         } else if(!updatedUser.isActive() && existingUser.isActive()) {
-            log.info("The user {} has been blocked", userId);
-            queueHandler.sendEventToQueue(userId, USER_BLOCKED_EVENT);
-        } else {
-            log.info("The state of the user {} has not changed", userId);
+            queueHandler.sendEventToQueue(existingUser.getId(), USER_BLOCKED_EVENT);
         }
-    }
-
-    private void updateUserProfile(User user) {
-        UserProfile userProfile = null;
-        if(nonNull(user.getUserProfileId())){
-            userProfile = userProfileRepository.findById(user.getUserProfileId()).orElse(null);
-        }
-        user.setUserProfile(userProfile);
     }
 }
