@@ -43,4 +43,9 @@
             <column name="is_active" type="BOOLEAN" defaultValue="true"/>
         </addColumn>
     </changeSet>
+    <changeSet author="Dziyana Bahdanava" id="addColumn is_email_confirmed">
+        <addColumn schemaName= "users" tableName="users" >
+            <column name="is_email_confirmed" type="BOOLEAN" defaultValue="false"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

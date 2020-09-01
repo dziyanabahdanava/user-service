@@ -51,6 +51,18 @@ public class UserController {
                 .build();
     }
 
+    @GetMapping("/{id}/confirmation")
+    public ResponseEntity<Void> confirmEmail(@PathVariable String id) {
+        User user = service.confirmEmail(id);
+        if(nonNull(user)) {
+            log.info("The email for user with id {} is confirmed", id);
+            return ResponseEntity.noContent().build();
+        } else {
+            log.error("The user with id {} not found", id);
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable String id) {
         service.delete(id);

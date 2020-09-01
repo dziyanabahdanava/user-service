@@ -1,10 +1,10 @@
 package com.epam.ms.service;
 
+import com.epam.ms.handler.UserRegistrationHandler;
 import com.epam.ms.queue.QueueHandler;
 import com.epam.ms.repository.UserRepository;
 import com.epam.ms.repository.domain.User;
 import com.epam.ms.service.validation.UserValidator;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,10 +26,14 @@ public class UserService {
     private UserValidator validator;
     @NonNull
     private QueueHandler queueHandler;
+    @NonNull
+    private UserRegistrationHandler registrationHandler;
 
     public User create(User user) {
         validator.validateOnCreate(user);
-        return repository.save(user);
+        User createdUser = repository.save(user);
+        registrationHandler.sendEmailConfirmation(createdUser);
+        return createdUser;
     }
 
     public List<User> findAll() {
@@ -51,6 +55,17 @@ public class UserService {
             User currentUser = existingUser.get();
             checkUserStateAndNotify(user, currentUser);
             copyUserData(user, currentUser);
+            return repository.save(currentUser);
+        } else {
+            return null;
+        }
+    }
+
+    public User confirmEmail(String userId) {
+        Optional<User> existingUser = repository.findById(userId);
+        if(existingUser.isPresent()) {
+            User currentUser = existingUser.get();
+            currentUser.setEmailConfirmed(true);
             return repository.save(currentUser);
         } else {
             return null;

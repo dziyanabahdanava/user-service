@@ -1,5 +1,6 @@
 package com.epam.ms.repository.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
@@ -31,6 +32,9 @@ public class User {
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private boolean isActive;
+
+    @JsonIgnore
+    private boolean isEmailConfirmed;
 
     @NotNull(message = "Password cannot be null")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
