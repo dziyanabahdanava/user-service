@@ -1,5 +1,6 @@
 package com.epam.ms.repository.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
@@ -26,6 +27,15 @@ public class User {
     @NotNull(message = "Email cannot be null")
     private String email;
 
+    @NotNull(message = "You must indicate whether you agree to receive notifications")
+    private boolean receiveNotifications;
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private boolean isActive;
+
+    @JsonIgnore
+    private boolean isEmailConfirmed;
+
     @NotNull(message = "Password cannot be null")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
@@ -33,4 +43,11 @@ public class User {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Enumerated(EnumType.STRING)
     private UserRole role;
+
+    @Transient
+    private String userProfileId;
+
+    @OneToOne
+    @JoinColumn(name = "user_profile_id", referencedColumnName = "id")
+    private UserProfile userProfile;
 }

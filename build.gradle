@@ -30,6 +30,9 @@ dependencies {
     implementation('org.postgresql:postgresql')
     implementation 'org.liquibase:liquibase-core'
     implementation 'org.apache.commons:commons-lang3'
+    implementation 'org.springframework.amqp:spring-rabbit'
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 }
 
 test {

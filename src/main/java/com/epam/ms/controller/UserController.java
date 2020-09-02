@@ -27,8 +27,10 @@ public class UserController {
     private UserService service;
 
     @GetMapping
-    public ResponseEntity<List<User>> getAll() {
-        return ResponseEntity.ok(service.findAll());
+    public ResponseEntity<List<User>> getAll(@RequestParam(required = false) Boolean receiveNotifications) {
+        return isNull(receiveNotifications)
+                ? ResponseEntity.ok(service.findAll())
+                : ResponseEntity.ok(service.findByReceiveNotifications(receiveNotifications));
     }
 
     @GetMapping("/{id}")
@@ -49,10 +51,22 @@ public class UserController {
                 .build();
     }
 
+    @GetMapping("/{id}/confirmation")
+    public ResponseEntity<Void> confirmEmail(@PathVariable String id) {
+        User user = service.confirmEmail(id);
+        if(nonNull(user)) {
+            log.info("The email for user with id {} is confirmed", id);
+            return ResponseEntity.noContent().build();
+        } else {
+            log.error("The user with id {} not found", id);
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable String id) {
         service.delete(id);
-        log.info("The notification with id {} is deleted", id);
+        log.info("The user with id {} is deleted", id);
         return ResponseEntity.noContent().build();
     }
 
