@@ -38,6 +38,7 @@ dependencies {
     testCompile group: 'org.springframework', name: 'spring-test', version: '5.2.8.RELEASE'
     testCompile group: 'org.hamcrest', name: 'hamcrest-library', version: '2.2'
     compile group: 'com.jayway.jsonpath', name: 'json-path', version: '2.4.0'
+    testCompile group: 'com.h2database', name: 'h2', version: '1.4.200'
 }
 
 test {
