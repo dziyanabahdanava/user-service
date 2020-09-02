@@ -13,6 +13,7 @@ public class UserException extends RuntimeException {
     private String errorCode;
     private Map<String, String> userParameters = new HashMap<>();
     private String overrideMessage;
+    private String message;
     private String overrideHTTPStatusCode;
 
     public UserException() {
@@ -30,8 +31,8 @@ public class UserException extends RuntimeException {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 
-    public UserException(String errorCode) {
-        this.setErrorCode(errorCode);
+    public UserException(String message) {
+        this.setMessage(message);
     }
 
     public String getErrorCode() {
@@ -60,6 +61,15 @@ public class UserException extends RuntimeException {
 
     public String getOverrideHTTPStatusCode() {
         return overrideHTTPStatusCode;
+    }
+
+    @Override
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public void setOverrideHTTPStatusCode(String overrideHTTPStatusCode) {
