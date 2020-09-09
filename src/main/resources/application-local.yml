@@ -1,0 +1,27 @@
+server:
+  port: 8080
+spring:
+  datasource:
+    password: postgres
+    platform: postgres
+    url: jdbc:postgresql://host.docker.internal:5448/postgres
+    username: postgres
+  jpa:
+    database: POSTGRESQL
+    show-sql: true
+  hibernate:
+    ddl-auto: none
+  liquibase:
+    enabled: true
+    change-log: classpath:liquibase/db.changelog.xml
+  mail:
+    host: smtp.mail.ru
+    port: 587
+    username: microservices.mp
+    password: 1111micro
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+rabbitmq:
+  host: host.docker.internal
+  queue: userEventsQueue

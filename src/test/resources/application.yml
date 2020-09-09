@@ -8,3 +8,6 @@ spring:
     dialect: H2Dialect
   liquibase:
     enabled: false
+rabbitmq:
+  host: localhost
+  queue: userEventsQueue

@@ -7,3 +7,7 @@ services:
       POSTGRES_USER: postgres
     ports:
       - "5448:5432"
+  user-service:
+    build: ./
+    ports:
+      - "8080:8080"
