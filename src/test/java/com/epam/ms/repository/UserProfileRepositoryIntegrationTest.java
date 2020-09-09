@@ -26,7 +26,7 @@ class UserProfileRepositoryIntegrationTest {
     private UserProfileRepository repository;
 
     @Test
-    public void whenFindById_thenReturnUserProfile() {
+    public void should_ReturnUserProfile_When_FindById() {
         // given
         UserProfile profile = createDefaultProfile();
         UserProfile persisted = entityManager.persist(profile);
@@ -41,7 +41,7 @@ class UserProfileRepositoryIntegrationTest {
     }
 
     @Test
-    public void whenFindByName_thenReturnEmployee() {
+    public void should_ReturnUsersProfiles_When_FindAll() {
         // given
         UserProfile profile = createDefaultProfile();
         entityManager.persist(profile);

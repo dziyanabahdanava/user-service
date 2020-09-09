@@ -1,5 +1,8 @@
 package com.epam.ms.service.exception;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,6 +12,8 @@ import static java.util.Objects.nonNull;
  * Base Exception for user data processing exceptions
  * @author Dziyana Bahdanava
  */
+@EqualsAndHashCode(callSuper = true)
+@Data
 public class UserException extends RuntimeException {
     private String errorCode;
     private Map<String, String> userParameters = new HashMap<>();
@@ -35,52 +40,11 @@ public class UserException extends RuntimeException {
         this.setMessage(message);
     }
 
-    public String getErrorCode() {
-        return errorCode;
-    }
-
-    public void setErrorCode(String errorCode) {
-        this.errorCode = errorCode;
-    }
-
-    public Map<String, String> getUserParameters() {
-        return userParameters;
-    }
-
-    public void setUserParameters(Map<String, String> userParameters) {
-        this.userParameters = userParameters;
-    }
-
-    public String getOverrideMessage() {
-        return overrideMessage;
-    }
-
-    public void setOverrideMessage(String overrideMessage) {
-        this.overrideMessage = overrideMessage;
-    }
-
-    public String getOverrideHTTPStatusCode() {
-        return overrideHTTPStatusCode;
-    }
-
-    @Override
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public void setOverrideHTTPStatusCode(String overrideHTTPStatusCode) {
-        this.overrideHTTPStatusCode = overrideHTTPStatusCode;
-    }
-
-    public void addUserParameter(String key, String value) {
+    private void addUserParameter(String key, String value) {
         this.getUserParameters().put(key, value);
     }
 
-    public void setParameters(Map<String, Object> parameters) {
+    private void setParameters(Map<String, Object> parameters) {
         if(nonNull(parameters)) {
             parameters.entrySet().stream()
                     .filter(entry -> nonNull(entry.getValue()))

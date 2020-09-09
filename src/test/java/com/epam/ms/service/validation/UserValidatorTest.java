@@ -26,7 +26,7 @@ class UserValidatorTest {
     private UserValidator validator;
 
     @Test
-    void shouldValidateOnCreate() {
+    void should_ThrowException_When_CreateUserWithUsedEmail() {
         User user = createUser();
         Mockito.when(repository.findByEmail(any())).thenReturn(Optional.of(user));
         try {
@@ -38,7 +38,7 @@ class UserValidatorTest {
     }
 
     @Test
-    void shouldValidateOnUpdate() {
+    void should_ThrowException_When_UpdateUserWithUsedEmail() {
         User user = createUser();
         Mockito.when(repository.findByEmail(any())).thenReturn(Optional.of(user));
         try {

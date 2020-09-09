@@ -14,7 +14,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
@@ -34,51 +35,72 @@ class UserServiceTest {
     private UserService service;
 
     @Test
-    void shouldCreateUser() {
+    void should_ValidateOnCreate_When_CreateUser() {
         User user = new User();
         service.create(user);
-        verify(validator, times(1)).validateOnCreate(user);
-        verify(repository, times(1)).save(user);
-        verify(registrationHandler, times(1)).sendEmailConfirmation(any());
+        verify(validator).validateOnCreate(user);
     }
 
     @Test
-    void shouldFindAllUsers() {
+    void should_CallRepositorySave_When_CreateUser() {
+        User user = new User();
+        service.create(user);
+        verify(repository).save(user);
+    }
+
+    @Test
+    void should_SendEmailConfirmation_When_CreateUser() {
+        User user = new User();
+        service.create(user);
+        verify(registrationHandler).sendEmailConfirmation(any());
+    }
+
+    @Test
+    void should_CallRepositoryFindAll_When_FindAllUsers() {
         service.findAll();
-        verify(repository, times(1)).findAll();
+        verify(repository).findAll();
     }
 
     @Test
-    void shouldFindByReceiveNotifications() {
+    void should_CallRepositoryFindByReceiveNotifications_When_FindUsersByReceiveNotifications() {
         service.findByReceiveNotifications(true);
-        verify(repository, times(1)).findByReceiveNotifications(true);
+        verify(repository).findByReceiveNotifications(true);
     }
 
     @Test
-    void shouldFindByNotReceiveNotifications() {
+    void should_CallRepositoryFindByReceiveNotifications_When_FindUsersByNotReceiveNotifications() {
         service.findByReceiveNotifications(false);
-        verify(repository, times(1)).findByReceiveNotifications(false);
+        verify(repository).findByReceiveNotifications(false);
     }
 
     @Test
-    void shouldFindUserById() {
+    void should_CallRepositoryFindById_When_FindUserById() {
         String id = "id";
         service.findById(id);
-        verify(repository, times(1)).findById(id);
+        verify(repository).findById(id);
     }
 
     @Test
-    void shouldUpdateUser() {
+    void should_CallRepositoryTwice_When_UpdateUser() {
         String id = "id";
         User user = new User();
         when(repository.findById(id)).thenReturn(Optional.of(user));
         service.update(id, user);
-        verify(repository, times(1)).findById(id);
-        verify(validator, times(1)).validateOnUpdate(user, id);
+        verify(repository).findById(id);
+        verify(repository).save(user);
     }
 
     @Test
-    void shouldSendUserBlockedNotification() {
+    void should_ValidateOnUpdate_When_UpdateUser() {
+        String id = "id";
+        User user = new User();
+        when(repository.findById(id)).thenReturn(Optional.of(user));
+        service.update(id, user);
+        verify(validator).validateOnUpdate(user, id);
+    }
+
+    @Test
+    void should_SendUserBlockedNotification_When_UserIsBlocked() {
         String id = "id";
         User existingUser = new User();
         existingUser.setActive(true);
@@ -87,11 +109,11 @@ class UserServiceTest {
         updatedUser.setActive(false);
         when(repository.findById(id)).thenReturn(Optional.of(existingUser));
         service.update(id, updatedUser);
-        verify(handler, times(1)).sendEventToQueue(id, "user.blocked");
+        verify(handler).sendEventToQueue(id, "user.blocked");
     }
 
     @Test
-    void shouldSendUserUnblockedNotification() {
+    void should_SendUserUnblockedNotification_When_UserIsUnblocked() {
         String id = "id";
         User existingUser = new User();
         existingUser.setActive(false);
@@ -100,22 +122,22 @@ class UserServiceTest {
         updatedUser.setActive(true);
         when(repository.findById(id)).thenReturn(Optional.of(existingUser));
         service.update(id, updatedUser);
-        verify(handler, times(1)).sendEventToQueue(id, "user.unblocked");
+        verify(handler).sendEventToQueue(id, "user.unblocked");
     }
 
     @Test
-    void shouldConfirmEmail() {
+    void should_UpdateUser_When_EmailIsConfirmed() {
         String id = "id";
         User user = new User();
         when(repository.findById(id)).thenReturn(Optional.of(user));
         service.confirmEmail(id);
-        verify(repository, times(1)).save(user);
+        verify(repository).save(user);
     }
 
     @Test
-    void shouldDeleteUser() {
+    void should_CallRepositoryDeleteById_When_DeleteUser() {
         String id = "id";
         service.delete(id);
-        verify(repository, times(1)).deleteById(id);
+        verify(repository).deleteById(id);
     }
 }
