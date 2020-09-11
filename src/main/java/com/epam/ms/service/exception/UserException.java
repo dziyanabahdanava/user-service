@@ -44,7 +44,7 @@ public class UserException extends RuntimeException {
         this.getUserParameters().put(key, value);
     }
 
-    private void setParameters(Map<String, Object> parameters) {
+    protected void setParameters(Map<String, Object> parameters) {
         if(nonNull(parameters)) {
             parameters.entrySet().stream()
                     .filter(entry -> nonNull(entry.getValue()))

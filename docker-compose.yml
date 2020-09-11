@@ -1,13 +1,39 @@
-version: '3'
+version: '3.5'
 services:
+
   postgres:
     image: postgres:latest
+    container_name: postgres
+    networks:
+      - ms
     environment:
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
     ports:
       - "5448:5432"
+
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:management
+    networks:
+      - ms
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
   user-service:
     build: ./
+    container_name: user-service
+    volumes:
+      - ./config/:/usr/src/apps/config/
+    networks:
+      - ms
+    depends_on:
+      - postgres
+      - rabbitmq
     ports:
       - "8080:8080"
+
+networks:
+  ms:
+    name: ms

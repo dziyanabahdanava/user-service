@@ -25,6 +25,5 @@ spring:
 rabbitmq:
   host: localhost
   queue: userEventsQueue
-
 management:
   endpoints.web.exposure.include: "*"
