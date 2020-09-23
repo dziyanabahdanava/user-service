@@ -12,6 +12,11 @@ sourceCompatibility = 1.11
 
 repositories {
     mavenCentral()
+    maven { url 'https://repo.spring.io/milestone' }
+}
+
+ext {
+    set('springCloudVersion', "Hoxton.SR1")
 }
 
 lombok {
@@ -35,7 +40,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     testCompile group: 'org.mockito', name: 'mockito-core', version: '3.5.7'
     testCompile group: 'org.hamcrest', name: 'hamcrest-library', version: '2.2'
-    compile group: 'com.jayway.jsonpath', name: 'json-path', version: '2.4.0'
+    implementation 'com.jayway.jsonpath:json-path:2.4.0'
+    implementation 'org.springframework.cloud:spring-cloud-starter-consul-all:2.2.4.RELEASE'
     testCompile group: 'com.h2database', name: 'h2', version: '1.4.200'
     testCompile group: 'org.jboss.arquillian', name: 'arquillian-bom', version: '1.7.0.Alpha4', ext: 'pom'
     testCompile group: 'org.glassfish.main.extras', name: 'glassfish-embedded-all', version: '5.1.0'
@@ -49,6 +55,12 @@ dependencies {
             "au.com.dius:pact-jvm-consumer-junit5_2.12:3.6.10",
             "au.com.dius:pact-jvm-provider_2.12:3.6.10",
             "au.com.dius:pact-jvm-provider-junit5_2.12:3.6.10")
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
 }
 
 test {

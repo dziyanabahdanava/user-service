@@ -1,6 +1,12 @@
 server:
   port: 8080
 spring:
+  application:
+    name: user-service
+  cloud:
+    consul:
+      discovery:
+        instanceId: ${spring.application.name}:${random.value}
   datasource:
     password: postgres
     platform: postgres
