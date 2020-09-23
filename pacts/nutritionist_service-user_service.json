@@ -1,0 +1,44 @@
+{
+  "provider": {
+    "name": "user_service"
+  },
+  "consumer": {
+    "name": "nutritionist_service"
+  },
+  "interactions": [
+    {
+      "description": "GET request to retrieve user profile",
+      "request": {
+        "method": "GET",
+        "path": "/users/7fe1faf1-dce3-4502-965f-b3f3b0cedfe9/profiles"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "id": "1e790666-d5d8-492b-8610-17fdc43798e6",
+          "age": 21,
+          "height": 160,
+          "weight": 55,
+          "goal": "CUT",
+          "physicalActivity": "ACTIVE_LIFESTYLE"
+        }
+      },
+      "providerStates": [
+        {
+          "name": "GET request for user profile is processed successfully"
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "pactSpecification": {
+      "version": "3.0.0"
+    },
+    "pact-jvm": {
+      "version": "3.6.10"
+    }
+  }
+}

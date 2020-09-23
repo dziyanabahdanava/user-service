@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testDb
+  jpa:
+    show-sql: true
+  hibernate:
+    ddl-auto: none
+    dialect: H2Dialect
+  liquibase:
+    enabled: false
+rabbitmq:
+  host: localhost
+  queue: userEventsQueue

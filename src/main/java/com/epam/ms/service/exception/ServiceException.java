@@ -1,6 +1,7 @@
 package com.epam.ms.service.exception;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,6 +9,7 @@ import java.util.Map;
 import static java.util.Objects.nonNull;
 
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class ServiceException extends RuntimeException {
     private String errorCode;
@@ -34,7 +36,7 @@ public class ServiceException extends RuntimeException {
         this.setParameters(parameters);
     }
 
-    public void setParameters(Map<String, Object> parameters) {
+    private void setParameters(Map<String, Object> parameters) {
         if(nonNull(parameters)) {
             parameters.entrySet().stream()
                     .filter(entry -> nonNull(entry.getValue()))
@@ -42,7 +44,7 @@ public class ServiceException extends RuntimeException {
         }
     }
 
-    public void addUserParameter(String key, String value) {
+    private void addUserParameter(String key, String value) {
         this.getUserParameters().put(key, value);
     }
 }

@@ -19,8 +19,6 @@ public class UserRegistrationHandler {
 
     public void sendEmailConfirmation(User user) {
         log.info("Waiting for email confirmation from {}", user.getEmail());
-
         emailService.sendEmail(user.getEmail(), SUBJECT, TEMPLATE_PATH, Map.of("id", user.getId()));
-        log.info("Waiting for email confirmation from {}", user.getId());
     }
 }
