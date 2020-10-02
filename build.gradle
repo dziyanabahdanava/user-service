@@ -12,7 +12,6 @@ sourceCompatibility = 1.11
 
 repositories {
     mavenCentral()
-    maven { url 'https://repo.spring.io/milestone' }
 }
 
 lombok {
@@ -36,7 +35,7 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'com.jayway.jsonpath:json-path:2.4.0'
-    implementation 'org.springframework.cloud:spring-cloud-starter-consul-all:2.2.4.RELEASE'
+    implementation 'org.springframework.cloud:spring-cloud-starter-consul-discovery:2.2.4.RELEASE'
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }

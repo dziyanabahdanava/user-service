@@ -2,6 +2,7 @@ package com.epam.ms.repository;
 
 import com.epam.ms.repository.domain.Goal;
 import com.epam.ms.repository.domain.PhysicalActivity;
+import com.epam.ms.repository.domain.User;
 import com.epam.ms.repository.domain.UserProfile;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -56,11 +57,14 @@ class UserProfileRepositoryIntegrationTest {
 
     private UserProfile createDefaultProfile() {
         UserProfile profile = new UserProfile();
+        User user = new User();
+        user.setId("id");
         profile.setPhysicalActivity(PhysicalActivity.LOW_ACTIVITY);
         profile.setGoal(Goal.BODY_RELIEF);
         profile.setWeight(80);
         profile.setHeight(175);
         profile.setAge(25);
+        profile.setUser(user);
         return profile;
     }
 }
