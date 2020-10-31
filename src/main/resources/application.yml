@@ -1,6 +1,12 @@
 server:
   port: 8080
 spring:
+  application:
+    name: user-service
+  cloud:
+    consul:
+      discovery:
+        instanceId: ${spring.application.name}:${random.value}
   datasource:
     password: postgres
     platform: postgres
@@ -18,7 +24,7 @@ spring:
     host: smtp.mail.ru
     port: 587
     username: microservices.mp
-    password: 1111micro
+    password: m2P3taauSAY(
     properties:
       mail.smtp.auth: true
       mail.smtp.starttls.enable: true

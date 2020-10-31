@@ -48,4 +48,11 @@
                                 schemaName="users"
                                 tableName="users"/>
     </changeSet>
+    <changeSet author="Dziyana Bahdanava" id="addColumn user_id">
+        <addColumn schemaName= "users" tableName="user_profiles" >
+            <column name="user_id" type="VARCHAR(36)">
+                <constraints nullable="false" foreignKeyName="fk_user" references="users.users(id)"/>
+            </column>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

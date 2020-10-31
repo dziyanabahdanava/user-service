@@ -4,6 +4,7 @@ import com.epam.ms.repository.UserProfileRepository;
 import com.epam.ms.repository.UserRepository;
 import com.epam.ms.repository.domain.User;
 import com.epam.ms.repository.domain.UserProfile;
+import com.epam.ms.service.validation.UserProfileValidator;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,8 +21,13 @@ public class UserProfileService {
     private UserProfileRepository userProfileRepository;
     @NonNull
     private UserRepository userRepository;
+    @NonNull
+    private UserProfileValidator validator;
 
     public UserProfile create(UserProfile userProfile) {
+        validator.validateOnCreate(userProfile);
+        User user = userRepository.findById(userProfile.getUser().getId()).get();
+        userProfile.setUser(user);
         return userProfileRepository.save(userProfile);
     }
 
@@ -30,9 +36,7 @@ public class UserProfileService {
     }
 
     public UserProfile findByUserId(String userId) {
-        Optional<User> user = userRepository.findById(userId);
-        return user.flatMap(value -> userProfileRepository.findById(value.getUserProfile().getId()))
-                .orElse(null);
+        return userProfileRepository.findByUserId(userId).orElse(null);
     }
 
     public UserProfile findById(String id) {
@@ -40,10 +44,13 @@ public class UserProfileService {
     }
 
     public UserProfile update(String id, UserProfile userProfile) {
-        Optional<UserProfile> existingUser = userProfileRepository.findById(id);
-        if(existingUser.isPresent()) {
-            UserProfile currentUserProfile = existingUser.get();
+        Optional<UserProfile> existingProfile = userProfileRepository.findById(id);
+        if(existingProfile.isPresent()) {
+            validator.validateOnUpdate(userProfile, id);
+            UserProfile currentUserProfile = existingProfile.get();
             copyUserProfileData(userProfile, currentUserProfile);
+            User user = userRepository.findById(userProfile.getUser().getId()).get();
+            userProfile.setUser(user);
             return userProfileRepository.save(currentUserProfile);
         } else {
             return null;
